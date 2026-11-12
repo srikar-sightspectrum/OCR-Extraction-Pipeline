@@ -1,0 +1,85 @@
+2026-11-11 12:45:59,571 | INFO | __main__ | OCR application started.
+2026-11-11 12:45:59,574 | INFO | src.ocr_engine | Initializing PaddleOCR PP-OCRv6 | language=en | device=cpu
+2026-11-11 12:46:05,768 | INFO | httpx2 | HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+2026-11-11 12:46:06,012 | INFO | httpx2 | HTTP Request: GET https://huggingface.co/api/models/PaddlePaddle/PP-OCRv6_medium_det/revision/main "HTTP/1.1 200 OK"
+2026-11-11 12:46:06,259 | INFO | httpx2 | HTTP Request: GET https://huggingface.co/api/models/PaddlePaddle/PP-OCRv6_medium_det/tree/8e0f56fb2ef86b461d99cfc7ac5c137738985f61?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-11-11 12:46:06,547 | INFO | httpx2 | HTTP Request: HEAD https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_det/resolve/8e0f56fb2ef86b461d99cfc7ac5c137738985f61/.gitattributes "HTTP/1.1 307 Temporary Redirect"
+2026-11-11 12:46:06,560 | INFO | httpx2 | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/PaddlePaddle/PP-OCRv6_medium_det/8e0f56fb2ef86b461d99cfc7ac5c137738985f61/.gitattributes?%2FPaddlePaddle%2FPP-OCRv6_medium_det%2Fresolve%2F8e0f56fb2ef86b461d99cfc7ac5c137738985f61%2F.gitattributes=&etag=%22c48a31d8dce80bfbfe392212dc49792e212a6436%22 "HTTP/1.1 200 OK"
+2026-11-11 12:46:06,570 | INFO | httpx2 | HTTP Request: GET https://huggingface.co/api/resolve-cache/models/PaddlePaddle/PP-OCRv6_medium_det/8e0f56fb2ef86b461d99cfc7ac5c137738985f61/.gitattributes?%2FPaddlePaddle%2FPP-OCRv6_medium_det%2Fresolve%2F8e0f56fb2ef86b461d99cfc7ac5c137738985f61%2F.gitattributes=&etag=%22c48a31d8dce80bfbfe392212dc49792e212a6436%22 "HTTP/1.1 200 OK"
+2026-11-11 12:46:06,591 | INFO | httpx2 | HTTP Request: HEAD https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_det/resolve/8e0f56fb2ef86b461d99cfc7ac5c137738985f61/inference.yml "HTTP/1.1 307 Temporary Redirect"
+2026-11-11 12:46:06,619 | INFO | httpx2 | HTTP Request: HEAD https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_det/resolve/8e0f56fb2ef86b461d99cfc7ac5c137738985f61/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-11-11 12:46:06,619 | INFO | httpx2 | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/PaddlePaddle/PP-OCRv6_medium_det/8e0f56fb2ef86b461d99cfc7ac5c137738985f61/inference.yml?%2FPaddlePaddle%2FPP-OCRv6_medium_det%2Fresolve%2F8e0f56fb2ef86b461d99cfc7ac5c137738985f61%2Finference.yml=&etag=%221c5c05809877e4c7385f899019fff0ac9017ca80%22 "HTTP/1.1 200 OK"
+2026-11-11 12:46:06,639 | INFO | httpx2 | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/PaddlePaddle/PP-OCRv6_medium_det/8e0f56fb2ef86b461d99cfc7ac5c137738985f61/README.md?%2FPaddlePaddle%2FPP-OCRv6_medium_det%2Fresolve%2F8e0f56fb2ef86b461d99cfc7ac5c137738985f61%2FREADME.md=&etag=%22715b0f0fcd71d2edc118b1e624ffd954fd9a02db%22 "HTTP/1.1 200 OK"
+2026-11-11 12:46:06,640 | INFO | httpx2 | HTTP Request: GET https://huggingface.co/api/resolve-cache/models/PaddlePaddle/PP-OCRv6_medium_det/8e0f56fb2ef86b461d99cfc7ac5c137738985f61/inference.yml?%2FPaddlePaddle%2FPP-OCRv6_medium_det%2Fresolve%2F8e0f56fb2ef86b461d99cfc7ac5c137738985f61%2Finference.yml=&etag=%221c5c05809877e4c7385f899019fff0ac9017ca80%22 "HTTP/1.1 200 OK"
+2026-11-11 12:46:06,646 | INFO | httpx2 | HTTP Request: HEAD https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_det/resolve/8e0f56fb2ef86b461d99cfc7ac5c137738985f61/inference.json "HTTP/1.1 307 Temporary Redirect"
+2026-11-11 12:46:06,663 | INFO | httpx2 | HTTP Request: GET https://huggingface.co/api/resolve-cache/models/PaddlePaddle/PP-OCRv6_medium_det/8e0f56fb2ef86b461d99cfc7ac5c137738985f61/README.md?%2FPaddlePaddle%2FPP-OCRv6_medium_det%2Fresolve%2F8e0f56fb2ef86b461d99cfc7ac5c137738985f61%2FREADME.md=&etag=%22715b0f0fcd71d2edc118b1e624ffd954fd9a02db%22 "HTTP/1.1 200 OK"
+2026-11-11 12:46:06,664 | INFO | httpx2 | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/PaddlePaddle/PP-OCRv6_medium_det/8e0f56fb2ef86b461d99cfc7ac5c137738985f61/inference.json?%2FPaddlePaddle%2FPP-OCRv6_medium_det%2Fresolve%2F8e0f56fb2ef86b461d99cfc7ac5c137738985f61%2Finference.json=&etag=%22548f60c00e9303a0323feceeae460256576671a6%22 "HTTP/1.1 200 OK"
+2026-11-11 12:46:06,778 | INFO | httpx2 | HTTP Request: GET https://huggingface.co/api/resolve-cache/models/PaddlePaddle/PP-OCRv6_medium_det/8e0f56fb2ef86b461d99cfc7ac5c137738985f61/inference.json?%2FPaddlePaddle%2FPP-OCRv6_medium_det%2Fresolve%2F8e0f56fb2ef86b461d99cfc7ac5c137738985f61%2Finference.json=&etag=%22548f60c00e9303a0323feceeae460256576671a6%22 "HTTP/1.1 200 OK"
+2026-11-11 12:46:06,965 | INFO | httpx2 | HTTP Request: GET https://huggingface.co/api/models/PaddlePaddle/PP-OCRv6_medium_det/xet-read-token/8e0f56fb2ef86b461d99cfc7ac5c137738985f61 "HTTP/1.1 200 OK"
+2026-11-11 12:46:24,641 | INFO | httpx2 | HTTP Request: GET https://huggingface.co/api/models/PaddlePaddle/PP-OCRv6_medium_rec/revision/main "HTTP/1.1 200 OK"
+2026-11-11 12:46:24,877 | INFO | httpx2 | HTTP Request: GET https://huggingface.co/api/models/PaddlePaddle/PP-OCRv6_medium_rec/tree/e5a92bcbc5cc1b494628e458d267778f0704fd7c?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-11-11 12:46:25,170 | INFO | httpx2 | HTTP Request: HEAD https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_rec/resolve/e5a92bcbc5cc1b494628e458d267778f0704fd7c/inference.yml "HTTP/1.1 307 Temporary Redirect"
+2026-11-11 12:46:25,189 | INFO | httpx2 | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/PaddlePaddle/PP-OCRv6_medium_rec/e5a92bcbc5cc1b494628e458d267778f0704fd7c/inference.yml?%2FPaddlePaddle%2FPP-OCRv6_medium_rec%2Fresolve%2Fe5a92bcbc5cc1b494628e458d267778f0704fd7c%2Finference.yml=&etag=%22c53a96fcd315a86cb4748d2746f3d90941e1c6d8%22 "HTTP/1.1 200 OK"
+2026-11-11 12:46:25,212 | INFO | httpx2 | HTTP Request: HEAD https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_rec/resolve/e5a92bcbc5cc1b494628e458d267778f0704fd7c/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-11-11 12:46:25,217 | INFO | httpx2 | HTTP Request: GET https://huggingface.co/api/resolve-cache/models/PaddlePaddle/PP-OCRv6_medium_rec/e5a92bcbc5cc1b494628e458d267778f0704fd7c/inference.yml?%2FPaddlePaddle%2FPP-OCRv6_medium_rec%2Fresolve%2Fe5a92bcbc5cc1b494628e458d267778f0704fd7c%2Finference.yml=&etag=%22c53a96fcd315a86cb4748d2746f3d90941e1c6d8%22 "HTTP/1.1 200 OK"
+2026-11-11 12:46:25,224 | INFO | httpx2 | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/PaddlePaddle/PP-OCRv6_medium_rec/e5a92bcbc5cc1b494628e458d267778f0704fd7c/README.md?%2FPaddlePaddle%2FPP-OCRv6_medium_rec%2Fresolve%2Fe5a92bcbc5cc1b494628e458d267778f0704fd7c%2FREADME.md=&etag=%22580e21d8953c774df101f56bf01aa851992e344f%22 "HTTP/1.1 200 OK"
+2026-11-11 12:46:25,240 | INFO | httpx2 | HTTP Request: GET https://huggingface.co/api/resolve-cache/models/PaddlePaddle/PP-OCRv6_medium_rec/e5a92bcbc5cc1b494628e458d267778f0704fd7c/README.md?%2FPaddlePaddle%2FPP-OCRv6_medium_rec%2Fresolve%2Fe5a92bcbc5cc1b494628e458d267778f0704fd7c%2FREADME.md=&etag=%22580e21d8953c774df101f56bf01aa851992e344f%22 "HTTP/1.1 200 OK"
+2026-11-11 12:46:25,242 | INFO | httpx2 | HTTP Request: HEAD https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_rec/resolve/e5a92bcbc5cc1b494628e458d267778f0704fd7c/.gitattributes "HTTP/1.1 307 Temporary Redirect"
+2026-11-11 12:46:25,252 | INFO | httpx2 | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/PaddlePaddle/PP-OCRv6_medium_rec/e5a92bcbc5cc1b494628e458d267778f0704fd7c/.gitattributes?%2FPaddlePaddle%2FPP-OCRv6_medium_rec%2Fresolve%2Fe5a92bcbc5cc1b494628e458d267778f0704fd7c%2F.gitattributes=&etag=%22c48a31d8dce80bfbfe392212dc49792e212a6436%22 "HTTP/1.1 200 OK"
+2026-11-11 12:46:25,279 | INFO | httpx2 | HTTP Request: GET https://huggingface.co/api/resolve-cache/models/PaddlePaddle/PP-OCRv6_medium_rec/e5a92bcbc5cc1b494628e458d267778f0704fd7c/.gitattributes?%2FPaddlePaddle%2FPP-OCRv6_medium_rec%2Fresolve%2Fe5a92bcbc5cc1b494628e458d267778f0704fd7c%2F.gitattributes=&etag=%22c48a31d8dce80bfbfe392212dc49792e212a6436%22 "HTTP/1.1 200 OK"
+2026-11-11 12:46:25,279 | INFO | httpx2 | HTTP Request: GET https://huggingface.co/api/models/PaddlePaddle/PP-OCRv6_medium_rec/xet-read-token/e5a92bcbc5cc1b494628e458d267778f0704fd7c "HTTP/1.1 200 OK"
+2026-11-11 12:46:25,300 | INFO | httpx2 | HTTP Request: HEAD https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_rec/resolve/e5a92bcbc5cc1b494628e458d267778f0704fd7c/inference.json "HTTP/1.1 307 Temporary Redirect"
+2026-11-11 12:46:25,311 | INFO | httpx2 | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/PaddlePaddle/PP-OCRv6_medium_rec/e5a92bcbc5cc1b494628e458d267778f0704fd7c/inference.json?%2FPaddlePaddle%2FPP-OCRv6_medium_rec%2Fresolve%2Fe5a92bcbc5cc1b494628e458d267778f0704fd7c%2Finference.json=&etag=%229e0192344de3b69dacdb19dd735efbd06bd852f9%22 "HTTP/1.1 200 OK"
+2026-11-11 12:46:25,323 | INFO | httpx2 | HTTP Request: GET https://huggingface.co/api/resolve-cache/models/PaddlePaddle/PP-OCRv6_medium_rec/e5a92bcbc5cc1b494628e458d267778f0704fd7c/inference.json?%2FPaddlePaddle%2FPP-OCRv6_medium_rec%2Fresolve%2Fe5a92bcbc5cc1b494628e458d267778f0704fd7c%2Finference.json=&etag=%229e0192344de3b69dacdb19dd735efbd06bd852f9%22 "HTTP/1.1 200 OK"
+2026-11-11 12:46:34,251 | INFO | src.ocr_engine | PaddleOCR initialized successfully.
+2026-11-11 12:46:34,252 | INFO | __main__ | Starting PDF conversion stage.
+2026-11-11 12:46:34,261 | INFO | src.pdf_converter | Found 3 PDF file(s).
+2026-11-11 12:46:34,264 | INFO | src.pdf_converter | Processing PDF: C:\OCR_PROJECT\input\27th oct.pdf
+2026-11-11 12:46:35,457 | INFO | src.pdf_converter | Saved page 1/1: C:\OCR_PROJECT\output\pdf_images\27th oct_page_1.png
+2026-11-11 12:46:35,458 | INFO | src.pdf_converter | Finished 27th oct.pdf | converted=1 skipped=0 failed=0
+2026-11-11 12:46:35,504 | INFO | src.pdf_converter | Processing PDF: C:\OCR_PROJECT\input\sanvruta enterprises sep bill 2026 (1).pdf
+2026-11-11 12:46:36,008 | INFO | src.pdf_converter | Saved page 1/1: C:\OCR_PROJECT\output\pdf_images\sanvruta enterprises sep bill 2026 (1)_page_1.png
+2026-11-11 12:46:36,009 | INFO | src.pdf_converter | Finished sanvruta enterprises sep bill 2026 (1).pdf | converted=1 skipped=0 failed=0
+2026-11-11 12:46:36,011 | INFO | src.pdf_converter | Processing PDF: C:\OCR_PROJECT\input\sightspectrum 1027,1080.pdf
+2026-11-11 12:46:36,608 | INFO | src.pdf_converter | Saved page 1/2: C:\OCR_PROJECT\output\pdf_images\sightspectrum 1027,1080_page_1.png
+2026-11-11 12:46:37,116 | INFO | src.pdf_converter | Saved page 2/2: C:\OCR_PROJECT\output\pdf_images\sightspectrum 1027,1080_page_2.png
+2026-11-11 12:46:37,117 | INFO | src.pdf_converter | Finished sightspectrum 1027,1080.pdf | converted=2 skipped=0 failed=0
+2026-11-11 12:46:37,119 | INFO | src.pdf_converter | ========== CONVERSION SUMMARY ==========
+2026-11-11 12:46:37,120 | INFO | src.pdf_converter | total_pdfs: 3
+2026-11-11 12:46:37,120 | INFO | src.pdf_converter | converted_pages: 4
+2026-11-11 12:46:37,120 | INFO | src.pdf_converter | skipped_pages: 0
+2026-11-11 12:46:37,121 | INFO | src.pdf_converter | failed_pages: 0
+2026-11-11 12:46:37,121 | INFO | src.pdf_converter | failed_documents: 0
+2026-11-11 12:46:37,121 | INFO | src.pdf_converter | Batch conversion completed.
+2026-11-11 12:46:37,122 | INFO | __main__ | PDF conversion stage completed: {'total_pdfs': 3, 'converted_pages': 4, 'skipped_pages': 0, 'failed_pages': 0, 'failed_documents': 0}
+2026-11-11 12:46:37,122 | INFO | __main__ | Starting image preprocessing stage.
+2026-11-11 12:46:37,124 | INFO | src.image_preprocessing | Found 4 image(s) to process.
+2026-11-11 12:46:37,400 | INFO | src.image_preprocessing | Image quality | blur=8889.09 brightness=231.13 contrast=54.11
+2026-11-11 12:46:37,403 | INFO | src.image_preprocessing | Applying mild brightness correction (bright image).
+2026-11-11 12:46:37,490 | INFO | src.image_preprocessing | Saved C:\OCR_PROJECT\output\ocr_images\27th oct_page_1.png | status=PROCESSED_TO_OCR | metrics={'blur_score': 8889.088592069256, 'brightness': 231.12614207650273, 'contrast': 54.11390171639743}
+2026-11-11 12:46:37,600 | INFO | src.image_preprocessing | Image quality | blur=2914.27 brightness=232.97 contrast=59.54
+2026-11-11 12:46:37,603 | INFO | src.image_preprocessing | Applying mild brightness correction (bright image).
+2026-11-11 12:46:37,675 | INFO | src.image_preprocessing | Saved C:\OCR_PROJECT\output\ocr_images\sanvruta enterprises sep bill 2026 (1)_page_1.png | status=PROCESSED_TO_OCR | metrics={'blur_score': 2914.26842019448, 'brightness': 232.9672753912754, 'contrast': 59.542004694495944}
+2026-11-11 12:46:37,786 | INFO | src.image_preprocessing | Image quality | blur=4590.84 brightness=239.56 contrast=42.62
+2026-11-11 12:46:37,789 | INFO | src.image_preprocessing | Applying mild brightness correction (bright image).
+2026-11-11 12:46:37,851 | INFO | src.image_preprocessing | Saved C:\OCR_PROJECT\output\ocr_images\sightspectrum 1027,1080_page_1.png | status=PROCESSED_TO_OCR | metrics={'blur_score': 4590.837909632764, 'brightness': 239.55521834747094, 'contrast': 42.61599665445381}
+2026-11-11 12:46:37,953 | INFO | src.image_preprocessing | Image quality | blur=2614.60 brightness=245.10 contrast=35.60
+2026-11-11 12:46:37,956 | INFO | src.image_preprocessing | Applying CLAHE because contrast is below threshold.
+2026-11-11 12:46:37,992 | INFO | src.image_preprocessing | Applying mild brightness correction (bright image).
+2026-11-11 12:46:38,048 | INFO | src.image_preprocessing | Saved C:\OCR_PROJECT\output\ocr_images\sightspectrum 1027,1080_page_2.png | status=PROCESSED_TO_OCR | metrics={'blur_score': 2614.5983486208593, 'brightness': 245.09814765944077, 'contrast': 35.60372284186905}
+2026-11-11 12:46:38,049 | INFO | src.image_preprocessing | Image preprocessing summary: {'total_images': 4, 'direct_to_ocr': 0, 'processed_to_ocr': 4, 'manual_review': 0, 'errors': 0}
+2026-11-11 12:46:38,052 | INFO | __main__ | Image preprocessing stage completed: {'total_images': 4, 'direct_to_ocr': 0, 'processed_to_ocr': 4, 'manual_review': 0, 'errors': 0}
+2026-11-11 12:46:38,052 | INFO | __main__ | Starting OCR stage.
+2026-11-11 12:46:38,054 | INFO | src.ocr_engine | Running OCR on: 27th oct_page_1.png
+2026-11-11 12:53:20,883 | INFO | src.ocr_engine | Saved OCR JSON: C:\OCR_PROJECT\output\json\27th oct_page_1.json
+2026-11-11 12:53:20,917 | INFO | src.ocr_engine | Running OCR on: sanvruta enterprises sep bill 2026 (1)_page_1.png
+2026-11-11 12:56:09,818 | INFO | src.ocr_engine | Saved OCR JSON: C:\OCR_PROJECT\output\json\sanvruta enterprises sep bill 2026 (1)_page_1.json
+2026-11-11 12:56:09,836 | INFO | src.ocr_engine | Running OCR on: sightspectrum 1027,1080_page_1.png
+2026-11-11 13:02:52,083 | INFO | src.ocr_engine | Saved OCR JSON: C:\OCR_PROJECT\output\json\sightspectrum 1027,1080_page_1.json
+2026-11-11 13:02:52,092 | INFO | src.ocr_engine | Running OCR on: sightspectrum 1027,1080_page_2.png
+2026-11-11 13:08:28,196 | INFO | src.ocr_engine | Saved OCR JSON: C:\OCR_PROJECT\output\json\sightspectrum 1027,1080_page_2.json
+2026-11-11 13:08:28,197 | INFO | src.ocr_engine | OCR batch summary: {'total_images': 4, 'successful': 4, 'failed': 0}
+2026-11-11 13:08:28,202 | INFO | __main__ | OCR stage completed: {'total_images': 4, 'successful': 4, 'failed': 0}
+2026-11-11 13:08:28,216 | INFO | src.file_manager | Saved JSON output: C:\OCR_PROJECT\output\json\processing_summary.json
+2026-11-11 13:08:28,217 | INFO | __main__ | Complete OCR pipeline finished.
+2026-11-11 13:08:28,217 | INFO | __main__ | Final summary: {'pdf_conversion': {'total_pdfs': 3, 'converted_pages': 4, 'skipped_pages': 0, 'failed_pages': 0, 'failed_documents': 0}, 'image_preprocessing': {'total_images': 4, 'direct_to_ocr': 0, 'processed_to_ocr': 4, 'manual_review': 0, 'errors': 0}, 'ocr': {'total_images': 4, 'successful': 4, 'failed': 0}}

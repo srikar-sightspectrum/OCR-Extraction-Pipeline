@@ -1,0 +1,12 @@
+# OCR project dependencies
+# CPU installation for Windows / local development.
+# Python 3.10–3.12 is a practical choice for this environment.
+
+# PaddlePaddle inference engine and PaddleOCR
+paddlepaddle==3.2.0
+paddleocr==3.7.0
+
+# Direct dependencies used by the project code
+PyMuPDF
+numpy
+opencv-contrib-python

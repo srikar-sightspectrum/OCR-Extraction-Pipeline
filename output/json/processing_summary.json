@@ -1,0 +1,21 @@
+{
+    "pdf_conversion": {
+        "total_pdfs": 3,
+        "converted_pages": 4,
+        "skipped_pages": 0,
+        "failed_pages": 0,
+        "failed_documents": 0
+    },
+    "image_preprocessing": {
+        "total_images": 4,
+        "direct_to_ocr": 0,
+        "processed_to_ocr": 4,
+        "manual_review": 0,
+        "errors": 0
+    },
+    "ocr": {
+        "total_images": 4,
+        "successful": 4,
+        "failed": 0
+    }
+}
