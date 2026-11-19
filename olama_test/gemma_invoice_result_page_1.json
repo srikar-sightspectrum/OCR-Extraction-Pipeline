@@ -1,0 +1,184 @@
+{
+    "invoice_details": {
+        "invoice_number": "1316/2026-27",
+        "invoice_date": "27-Oct-26",
+        "due_date": null,
+        "po_number": null,
+        "gstin": "33AKFPR0397C1ZB",
+        "supplier_name": "CITY INFOTECH",
+        "buyer_name": "SIGHTSPECTRUM TECHNOLOGY SOLUTIONS PVT.LTD.",
+        "subtotal": null,
+        "tax_amount": null,
+        "discount": null,
+        "total_amount": 11877.0,
+        "currency": null,
+        "payment_terms": null
+    },
+    "line_items": [
+        {
+            "description": "GAR BAGE LARGE Shalimar",
+            "hsn_sac": null,
+            "quantity": "10 PKT",
+            "unit": "PKT",
+            "rate": 145.0,
+            "discount": null,
+            "tax_rate": "18 %",
+            "tax_amount": 252.0,
+            "amount": 1700.0
+        },
+        {
+            "description": "Harpic 500ML",
+            "hsn_sac": "3402",
+            "quantity": "10 NOS",
+            "unit": "NOS",
+            "rate": 85.0,
+            "discount": null,
+            "tax_rate": null,
+            "tax_amount": null,
+            "amount": 850.0
+        },
+        {
+            "description": "Color Phenyl",
+            "hsn_sac": "34022090",
+            "quantity": "7 NOS",
+            "unit": "NOS",
+            "rate": 55.0,
+            "discount": null,
+            "tax_rate": "18 %",
+            "tax_amount": 10.0,
+            "amount": 385.0
+        },
+        {
+            "description": "Acid",
+            "hsn_sac": "48182000",
+            "quantity": "2 NOS",
+            "unit": "NOS",
+            "rate": 85.0,
+            "discount": null,
+            "tax_rate": "18 %",
+            "tax_amount": 35.0,
+            "amount": 225.0
+        },
+        {
+            "description": "Colln 500ML",
+            "hsn_sac": "3402",
+            "quantity": "2 LTR",
+            "unit": "LTR",
+            "rate": 110.0,
+            "discount": null,
+            "tax_rate": "18 %",
+            "tax_amount": 10.0,
+            "amount": 242.0
+        },
+        {
+            "description": "VIM BAR SOAP",
+            "hsn_sac": null,
+            "quantity": "10 NOS",
+            "unit": "NOS",
+            "rate": 9.0,
+            "discount": null,
+            "tax_rate": "18 %",
+            "tax_amount": 25.0,
+            "amount": 112.5
+        },
+        {
+            "description": "ALA RIN 500 ML",
+            "hsn_sac": null,
+            "quantity": "2 NOS",
+            "unit": "NOS",
+            "rate": 110.0,
+            "discount": null,
+            "tax_rate": "18 %",
+            "tax_amount": 35.0,
+            "amount": 242.0
+        },
+        {
+            "description": "Lizol 5Ltr CAN",
+            "hsn_sac": "34022020",
+            "quantity": "1 CAN",
+            "unit": "CAN",
+            "rate": 750.0,
+            "discount": null,
+            "tax_rate": "18 %",
+            "tax_amount": 10.0,
+            "amount": 900.0
+        },
+        {
+            "description": "Soap oil 5 LTR",
+            "hsn_sac": null,
+            "quantity": "1 CAN",
+            "unit": "CAN",
+            "rate": 250.0,
+            "discount": null,
+            "tax_rate": "18 %",
+            "tax_amount": 35.0,
+            "amount": 350.0
+        },
+        {
+            "description": "COCONUT BROOM BIG",
+            "hsn_sac": null,
+            "quantity": "4 NOS",
+            "unit": "NOS",
+            "rate": 50.0,
+            "discount": null,
+            "tax_rate": "0 %",
+            "tax_amount": 0.0,
+            "amount": 200.0
+        },
+        {
+            "description": "ROOM SPRAY GODREJ",
+            "hsn_sac": null,
+            "quantity": "10 NOS",
+            "unit": "NOS",
+            "rate": 135.0,
+            "discount": null,
+            "tax_rate": "18 %",
+            "tax_amount": 25.0,
+            "amount": 162.75
+        },
+        {
+            "description": "URINAL SCREEN",
+            "hsn_sac": null,
+            "quantity": "4 NOS",
+            "unit": "NOS",
+            "rate": 85.0,
+            "discount": null,
+            "tax_rate": null,
+            "tax_amount": null,
+            "amount": 340.0
+        },
+        {
+            "description": "URINAL CUBE",
+            "hsn_sac": null,
+            "quantity": "1 PKT",
+            "unit": "PKT",
+            "rate": 42.0,
+            "discount": null,
+            "tax_rate": "18 %",
+            "tax_amount": 7.5,
+            "amount": 49.3
+        },
+        {
+            "description": "HIT SPRAY RED",
+            "hsn_sac": null,
+            "quantity": "2 NOS",
+            "unit": "NOS",
+            "rate": 120.0,
+            "discount": null,
+            "tax_rate": "18 %",
+            "tax_amount": 35.0,
+            "amount": 270.0
+        },
+        {
+            "description": "Dettol Hand Wash 900 MI",
+            "hsn_sac": null,
+            "quantity": "20 LTR",
+            "unit": "LTR",
+            "rate": 170.0,
+            "discount": null,
+            "tax_rate": null,
+            "tax_amount": null,
+            "amount": 3400.0
+        }
+    ]
+}

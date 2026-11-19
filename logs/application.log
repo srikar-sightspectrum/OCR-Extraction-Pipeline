@@ -83,3 +83,163 @@
 2026-11-11 13:08:28,216 | INFO | src.file_manager | Saved JSON output: C:\OCR_PROJECT\output\json\processing_summary.json
 2026-11-11 13:08:28,217 | INFO | __main__ | Complete OCR pipeline finished.
 2026-11-11 13:08:28,217 | INFO | __main__ | Final summary: {'pdf_conversion': {'total_pdfs': 3, 'converted_pages': 4, 'skipped_pages': 0, 'failed_pages': 0, 'failed_documents': 0}, 'image_preprocessing': {'total_images': 4, 'direct_to_ocr': 0, 'processed_to_ocr': 4, 'manual_review': 0, 'errors': 0}, 'ocr': {'total_images': 4, 'successful': 4, 'failed': 0}}
+2026-11-12 23:11:21,863 | INFO | __main__ | OCR application started.
+2026-11-12 23:11:21,884 | INFO | src.ocr_engine | Initializing PaddleOCR PP-OCRv6 | language=en | device=cpu
+2026-11-12 23:11:47,195 | INFO | src.ocr_engine | PaddleOCR initialized successfully.
+2026-11-12 23:11:47,195 | INFO | __main__ | Starting PDF conversion stage.
+2026-11-12 23:11:47,195 | INFO | src.pdf_converter | Found 3 PDF file(s).
+2026-11-12 23:11:47,195 | INFO | src.pdf_converter | Processing PDF: C:\OCR_PROJECT\input\27th oct.pdf
+2026-11-12 23:11:47,573 | INFO | src.pdf_converter | Skipping existing image: C:\OCR_PROJECT\output\pdf_images\27th oct_page_1.png
+2026-11-12 23:11:47,575 | INFO | src.pdf_converter | Finished 27th oct.pdf | converted=0 skipped=1 failed=0
+2026-11-12 23:11:47,581 | INFO | src.pdf_converter | Processing PDF: C:\OCR_PROJECT\input\sanvruta enterprises sep bill 2026 (1).pdf
+2026-11-12 23:11:47,688 | INFO | src.pdf_converter | Skipping existing image: C:\OCR_PROJECT\output\pdf_images\sanvruta enterprises sep bill 2026 (1)_page_1.png
+2026-11-12 23:11:47,689 | INFO | src.pdf_converter | Finished sanvruta enterprises sep bill 2026 (1).pdf | converted=0 skipped=1 failed=0
+2026-11-12 23:11:47,690 | INFO | src.pdf_converter | Processing PDF: C:\OCR_PROJECT\input\sightspectrum 1027,1080.pdf
+2026-11-12 23:11:47,726 | INFO | src.pdf_converter | Skipping existing image: C:\OCR_PROJECT\output\pdf_images\sightspectrum 1027,1080_page_1.png
+2026-11-12 23:11:47,730 | INFO | src.pdf_converter | Skipping existing image: C:\OCR_PROJECT\output\pdf_images\sightspectrum 1027,1080_page_2.png
+2026-11-12 23:11:47,731 | INFO | src.pdf_converter | Finished sightspectrum 1027,1080.pdf | converted=0 skipped=2 failed=0
+2026-11-12 23:11:47,731 | INFO | src.pdf_converter | ========== CONVERSION SUMMARY ==========
+2026-11-12 23:11:47,732 | INFO | src.pdf_converter | total_pdfs: 3
+2026-11-12 23:11:47,732 | INFO | src.pdf_converter | converted_pages: 0
+2026-11-12 23:11:47,733 | INFO | src.pdf_converter | skipped_pages: 4
+2026-11-12 23:11:47,733 | INFO | src.pdf_converter | failed_pages: 0
+2026-11-12 23:11:47,735 | INFO | src.pdf_converter | failed_documents: 0
+2026-11-12 23:11:47,735 | INFO | src.pdf_converter | Batch conversion completed.
+2026-11-12 23:11:47,736 | INFO | __main__ | PDF conversion stage completed: {'total_pdfs': 3, 'converted_pages': 0, 'skipped_pages': 4, 'failed_pages': 0, 'failed_documents': 0}
+2026-11-12 23:11:47,736 | INFO | __main__ | Starting image preprocessing stage.
+2026-11-12 23:11:47,739 | INFO | src.image_preprocessing | Found 4 image(s) to process.
+2026-11-12 23:11:48,119 | INFO | src.image_preprocessing | Image quality | blur=8889.09 brightness=231.13 contrast=54.11
+2026-11-12 23:11:48,125 | INFO | src.image_preprocessing | Applying mild brightness correction (bright image).
+2026-11-12 23:11:48,245 | INFO | src.image_preprocessing | Saved C:\OCR_PROJECT\output\ocr_images\27th oct_page_1.png | status=PROCESSED_TO_OCR | metrics={'blur_score': 8889.088592069256, 'brightness': 231.12614207650273, 'contrast': 54.11390171639743}
+2026-11-12 23:11:48,422 | INFO | src.image_preprocessing | Image quality | blur=2914.27 brightness=232.97 contrast=59.54
+2026-11-12 23:11:48,425 | INFO | src.image_preprocessing | Applying mild brightness correction (bright image).
+2026-11-12 23:11:48,510 | INFO | src.image_preprocessing | Saved C:\OCR_PROJECT\output\ocr_images\sanvruta enterprises sep bill 2026 (1)_page_1.png | status=PROCESSED_TO_OCR | metrics={'blur_score': 2914.26842019448, 'brightness': 232.9672753912754, 'contrast': 59.542004694495944}
+2026-11-12 23:11:48,673 | INFO | src.image_preprocessing | Image quality | blur=4590.84 brightness=239.56 contrast=42.62
+2026-11-12 23:11:48,678 | INFO | src.image_preprocessing | Applying mild brightness correction (bright image).
+2026-11-12 23:11:48,756 | INFO | src.image_preprocessing | Saved C:\OCR_PROJECT\output\ocr_images\sightspectrum 1027,1080_page_1.png | status=PROCESSED_TO_OCR | metrics={'blur_score': 4590.837909632764, 'brightness': 239.55521834747094, 'contrast': 42.61599665445381}
+2026-11-12 23:11:48,966 | INFO | src.image_preprocessing | Image quality | blur=2614.60 brightness=245.10 contrast=35.60
+2026-11-12 23:11:48,967 | INFO | src.image_preprocessing | Applying CLAHE because contrast is below threshold.
+2026-11-12 23:11:49,019 | INFO | src.image_preprocessing | Applying mild brightness correction (bright image).
+2026-11-12 23:11:49,099 | INFO | src.image_preprocessing | Saved C:\OCR_PROJECT\output\ocr_images\sightspectrum 1027,1080_page_2.png | status=PROCESSED_TO_OCR | metrics={'blur_score': 2614.5983486208593, 'brightness': 245.09814765944077, 'contrast': 35.60372284186905}
+2026-11-12 23:11:49,100 | INFO | src.image_preprocessing | Image preprocessing summary: {'total_images': 4, 'direct_to_ocr': 0, 'processed_to_ocr': 4, 'manual_review': 0, 'errors': 0}
+2026-11-12 23:11:49,105 | INFO | __main__ | Image preprocessing stage completed: {'total_images': 4, 'direct_to_ocr': 0, 'processed_to_ocr': 4, 'manual_review': 0, 'errors': 0}
+2026-11-12 23:11:49,106 | INFO | __main__ | Starting OCR stage.
+2026-11-12 23:11:49,267 | INFO | src.ocr_engine | Running OCR on: 27th oct_page_1.png
+2026-11-12 23:16:36,025 | INFO | src.ocr_engine | Saved OCR JSON: C:\OCR_PROJECT\output\json\27th oct_page_1.json
+2026-11-12 23:16:36,290 | INFO | src.ocr_engine | Running OCR on: sanvruta enterprises sep bill 2026 (1)_page_1.png
+2026-11-12 23:17:55,312 | INFO | src.ocr_engine | Saved OCR JSON: C:\OCR_PROJECT\output\json\sanvruta enterprises sep bill 2026 (1)_page_1.json
+2026-11-12 23:17:55,509 | INFO | src.ocr_engine | Running OCR on: sightspectrum 1027,1080_page_1.png
+2026-11-12 23:22:37,047 | INFO | src.ocr_engine | Saved OCR JSON: C:\OCR_PROJECT\output\json\sightspectrum 1027,1080_page_1.json
+2026-11-12 23:22:37,151 | INFO | src.ocr_engine | Running OCR on: sightspectrum 1027,1080_page_2.png
+2026-11-12 23:25:41,888 | INFO | src.ocr_engine | Saved OCR JSON: C:\OCR_PROJECT\output\json\sightspectrum 1027,1080_page_2.json
+2026-11-12 23:25:41,889 | INFO | src.ocr_engine | OCR batch summary: {'total_images': 4, 'successful': 4, 'failed': 0}
+2026-11-12 23:25:41,905 | INFO | __main__ | OCR stage completed: {'total_images': 4, 'successful': 4, 'failed': 0}
+2026-11-12 23:25:41,954 | INFO | __main__ | Starting PDF reconstruction stage. JSON files found: 4
+2026-11-12 23:25:42,142 | INFO | src.pdf_generator | Loaded OCR JSON: C:\OCR_PROJECT\output\json\27th oct_page_1.json
+2026-11-12 23:25:42,694 | ERROR | __main__ | PDF reconstruction failed for OCR JSON: C:\OCR_PROJECT\output\json\27th oct_page_1.json
+Traceback (most recent call last):
+  File "C:\OCR_PROJECT\main.py", line 294, in process_pdf_reconstruction_stage
+    generate_pdf_from_json(
+  File "C:\OCR_PROJECT\src\pdf_generator.py", line 535, in generate_pdf_from_json
+    total_inserted += insert_text_regions(
+                      ^^^^^^^^^^^^^^^^^^^^
+  File "C:\OCR_PROJECT\src\pdf_generator.py", line 373, in insert_text_regions
+    raise ValueError(
+ValueError: Could not place text in page 1, region 1: 'TAX INVOICE'
+2026-11-12 23:25:42,856 | INFO | src.pdf_generator | Loaded OCR JSON: C:\OCR_PROJECT\output\json\sanvruta enterprises sep bill 2026 (1)_page_1.json
+2026-11-12 23:25:43,251 | ERROR | __main__ | PDF reconstruction failed for OCR JSON: C:\OCR_PROJECT\output\json\sanvruta enterprises sep bill 2026 (1)_page_1.json
+Traceback (most recent call last):
+  File "C:\OCR_PROJECT\main.py", line 294, in process_pdf_reconstruction_stage
+    generate_pdf_from_json(
+  File "C:\OCR_PROJECT\src\pdf_generator.py", line 535, in generate_pdf_from_json
+    total_inserted += insert_text_regions(
+                      ^^^^^^^^^^^^^^^^^^^^
+  File "C:\OCR_PROJECT\src\pdf_generator.py", line 373, in insert_text_regions
+    raise ValueError(
+ValueError: Could not place text in page 1, region 7: 'a'
+2026-11-12 23:25:43,287 | INFO | src.pdf_generator | Loaded OCR JSON: C:\OCR_PROJECT\output\json\sightspectrum 1027,1080_page_1.json
+2026-11-12 23:25:43,300 | ERROR | __main__ | PDF reconstruction failed for OCR JSON: C:\OCR_PROJECT\output\json\sightspectrum 1027,1080_page_1.json
+Traceback (most recent call last):
+  File "C:\OCR_PROJECT\main.py", line 294, in process_pdf_reconstruction_stage
+    generate_pdf_from_json(
+  File "C:\OCR_PROJECT\src\pdf_generator.py", line 535, in generate_pdf_from_json
+    total_inserted += insert_text_regions(
+                      ^^^^^^^^^^^^^^^^^^^^
+  File "C:\OCR_PROJECT\src\pdf_generator.py", line 373, in insert_text_regions
+    raise ValueError(
+ValueError: Could not place text in page 1, region 1: 'TAX INVOICE'
+2026-11-12 23:25:43,365 | INFO | src.pdf_generator | Loaded OCR JSON: C:\OCR_PROJECT\output\json\sightspectrum 1027,1080_page_2.json
+2026-11-12 23:25:43,383 | ERROR | __main__ | PDF reconstruction failed for OCR JSON: C:\OCR_PROJECT\output\json\sightspectrum 1027,1080_page_2.json
+Traceback (most recent call last):
+  File "C:\OCR_PROJECT\main.py", line 294, in process_pdf_reconstruction_stage
+    generate_pdf_from_json(
+  File "C:\OCR_PROJECT\src\pdf_generator.py", line 535, in generate_pdf_from_json
+    total_inserted += insert_text_regions(
+                      ^^^^^^^^^^^^^^^^^^^^
+  File "C:\OCR_PROJECT\src\pdf_generator.py", line 373, in insert_text_regions
+    raise ValueError(
+ValueError: Could not place text in page 1, region 2: 'TAX INVOICE'
+2026-11-12 23:25:43,383 | INFO | __main__ | PDF reconstruction stage completed: {'total_json_files': 4, 'successful': 0, 'failed': 4}
+2026-11-12 23:25:43,411 | INFO | src.file_manager | Saved JSON output: C:\OCR_PROJECT\output\json\processing_summary.json
+2026-11-12 23:25:43,411 | INFO | __main__ | Complete OCR pipeline finished.
+2026-11-12 23:25:43,413 | INFO | __main__ | Final summary: {'pdf_conversion': {'total_pdfs': 3, 'converted_pages': 0, 'skipped_pages': 4, 'failed_pages': 0, 'failed_documents': 0}, 'image_preprocessing': {'total_images': 4, 'direct_to_ocr': 0, 'processed_to_ocr': 4, 'manual_review': 0, 'errors': 0}, 'ocr': {'total_images': 4, 'successful': 4, 'failed': 0}, 'pdf_reconstruction': {'total_json_files': 4, 'successful': 0, 'failed': 4}}
+2026-11-14 12:57:00,281 | INFO | __main__ | OCR application started.
+2026-11-14 12:57:00,298 | INFO | src.ocr_engine | Initializing PaddleOCR PP-OCRv6 | language=en | device=cpu
+2026-11-14 12:57:24,082 | INFO | src.ocr_engine | PaddleOCR initialized successfully.
+2026-11-14 12:57:24,083 | INFO | __main__ | Starting PDF conversion stage.
+2026-11-14 12:57:24,088 | INFO | src.pdf_converter | Found 1 PDF file(s).
+2026-11-14 12:57:24,089 | INFO | src.pdf_converter | Processing PDF: C:\OCR_PROJECT\input\sample invoice.pdf
+2026-11-14 12:57:24,714 | INFO | src.pdf_converter | Saved page 1/2: C:\OCR_PROJECT\output\pdf_images\sample invoice_page_1.png
+2026-11-14 12:57:25,054 | INFO | src.pdf_converter | Saved page 2/2: C:\OCR_PROJECT\output\pdf_images\sample invoice_page_2.png
+2026-11-14 12:57:25,055 | INFO | src.pdf_converter | Finished sample invoice.pdf | converted=2 skipped=0 failed=0
+2026-11-14 12:57:25,070 | INFO | src.pdf_converter | ========== CONVERSION SUMMARY ==========
+2026-11-14 12:57:25,070 | INFO | src.pdf_converter | total_pdfs: 1
+2026-11-14 12:57:25,071 | INFO | src.pdf_converter | converted_pages: 2
+2026-11-14 12:57:25,072 | INFO | src.pdf_converter | skipped_pages: 0
+2026-11-14 12:57:25,073 | INFO | src.pdf_converter | failed_pages: 0
+2026-11-14 12:57:25,074 | INFO | src.pdf_converter | failed_documents: 0
+2026-11-14 12:57:25,074 | INFO | src.pdf_converter | Batch conversion completed.
+2026-11-14 12:57:25,075 | INFO | __main__ | PDF conversion stage completed: {'total_pdfs': 1, 'converted_pages': 2, 'skipped_pages': 0, 'failed_pages': 0, 'failed_documents': 0}
+2026-11-14 12:57:25,075 | INFO | __main__ | Starting image preprocessing stage.
+2026-11-14 12:57:25,086 | INFO | src.image_preprocessing | Found 6 image(s) to process.
+2026-11-14 12:57:25,491 | INFO | src.image_preprocessing | Image quality | blur=8889.09 brightness=231.13 contrast=54.11
+2026-11-14 12:57:25,494 | INFO | src.image_preprocessing | Applying mild brightness correction (bright image).
+2026-11-14 12:57:25,609 | INFO | src.image_preprocessing | Saved C:\OCR_PROJECT\output\ocr_images\27th oct_page_1.png | status=PROCESSED_TO_OCR | metrics={'blur_score': 8889.088592069256, 'brightness': 231.12614207650273, 'contrast': 54.11390171639743}
+2026-11-14 12:57:25,737 | INFO | src.image_preprocessing | Image quality | blur=672.90 brightness=253.41 contrast=12.91
+2026-11-14 12:57:25,741 | INFO | src.image_preprocessing | Applying CLAHE because contrast is below threshold.
+2026-11-14 12:57:25,777 | INFO | src.image_preprocessing | Applying mild brightness correction (bright image).
+2026-11-14 12:57:25,826 | INFO | src.image_preprocessing | Saved C:\OCR_PROJECT\output\ocr_images\sample invoice_page_1.png | status=PROCESSED_TO_OCR | metrics={'blur_score': 672.8981479383066, 'brightness': 253.413850802644, 'contrast': 12.91424025227372}
+2026-11-14 12:57:25,945 | INFO | src.image_preprocessing | Image quality | blur=501.73 brightness=253.62 contrast=12.80
+2026-11-14 12:57:25,954 | INFO | src.image_preprocessing | Applying CLAHE because contrast is below threshold.
+2026-11-14 12:57:25,956 | INFO | src.image_preprocessing | Applying mild brightness correction (bright image).
+2026-11-14 12:57:26,007 | INFO | src.image_preprocessing | Saved C:\OCR_PROJECT\output\ocr_images\sample invoice_page_2.png | status=PROCESSED_TO_OCR | metrics={'blur_score': 501.7279043122443, 'brightness': 253.61659175322632, 'contrast': 12.801552655765354}
+2026-11-14 12:57:26,188 | INFO | src.image_preprocessing | Image quality | blur=2914.27 brightness=232.97 contrast=59.54
+2026-11-14 12:57:26,195 | INFO | src.image_preprocessing | Applying mild brightness correction (bright image).
+2026-11-14 12:57:26,263 | INFO | src.image_preprocessing | Saved C:\OCR_PROJECT\output\ocr_images\sanvruta enterprises sep bill 2026 (1)_page_1.png | status=PROCESSED_TO_OCR | metrics={'blur_score': 2914.26842019448, 'brightness': 232.9672753912754, 'contrast': 59.542004694495944}
+2026-11-14 12:57:26,455 | INFO | src.image_preprocessing | Image quality | blur=4590.84 brightness=239.56 contrast=42.62
+2026-11-14 12:57:26,458 | INFO | src.image_preprocessing | Applying mild brightness correction (bright image).
+2026-11-14 12:57:26,540 | INFO | src.image_preprocessing | Saved C:\OCR_PROJECT\output\ocr_images\sightspectrum 1027,1080_page_1.png | status=PROCESSED_TO_OCR | metrics={'blur_score': 4590.837909632764, 'brightness': 239.55521834747094, 'contrast': 42.61599665445381}
+2026-11-14 12:57:26,721 | INFO | src.image_preprocessing | Image quality | blur=2614.60 brightness=245.10 contrast=35.60
+2026-11-14 12:57:26,727 | INFO | src.image_preprocessing | Applying CLAHE because contrast is below threshold.
+2026-11-14 12:57:26,732 | INFO | src.image_preprocessing | Applying mild brightness correction (bright image).
+2026-11-14 12:57:26,812 | INFO | src.image_preprocessing | Saved C:\OCR_PROJECT\output\ocr_images\sightspectrum 1027,1080_page_2.png | status=PROCESSED_TO_OCR | metrics={'blur_score': 2614.5983486208593, 'brightness': 245.09814765944077, 'contrast': 35.60372284186905}
+2026-11-14 12:57:26,812 | INFO | src.image_preprocessing | Image preprocessing summary: {'total_images': 6, 'direct_to_ocr': 0, 'processed_to_ocr': 6, 'manual_review': 0, 'errors': 0}
+2026-11-14 12:57:26,816 | INFO | __main__ | Image preprocessing stage completed: {'total_images': 6, 'direct_to_ocr': 0, 'processed_to_ocr': 6, 'manual_review': 0, 'errors': 0}
+2026-11-14 12:57:26,816 | INFO | __main__ | Starting OCR stage.
+2026-11-14 12:57:26,818 | INFO | src.ocr_engine | Running OCR on: 27th oct_page_1.png
+2026-11-14 13:02:05,145 | INFO | src.ocr_engine | Saved OCR JSON: C:\OCR_PROJECT\output\json\27th oct_page_1.json
+2026-11-14 13:02:05,240 | INFO | src.ocr_engine | Running OCR on: sample invoice_page_1.png
+2026-11-14 13:03:59,172 | INFO | src.ocr_engine | Saved OCR JSON: C:\OCR_PROJECT\output\json\sample invoice_page_1.json
+2026-11-14 13:03:59,183 | INFO | src.ocr_engine | Running OCR on: sample invoice_page_2.png
+2026-11-14 13:05:16,718 | INFO | src.ocr_engine | Saved OCR JSON: C:\OCR_PROJECT\output\json\sample invoice_page_2.json
+2026-11-14 13:05:16,728 | INFO | src.ocr_engine | Running OCR on: sanvruta enterprises sep bill 2026 (1)_page_1.png
+2026-11-14 13:06:44,806 | INFO | src.ocr_engine | Saved OCR JSON: C:\OCR_PROJECT\output\json\sanvruta enterprises sep bill 2026 (1)_page_1.json
+2026-11-14 13:06:44,814 | INFO | src.ocr_engine | Running OCR on: sightspectrum 1027,1080_page_1.png
+2026-11-14 13:11:14,873 | INFO | src.ocr_engine | Saved OCR JSON: C:\OCR_PROJECT\output\json\sightspectrum 1027,1080_page_1.json
+2026-11-14 13:11:14,879 | INFO | src.ocr_engine | Running OCR on: sightspectrum 1027,1080_page_2.png
+2026-11-14 13:14:04,916 | INFO | src.ocr_engine | Saved OCR JSON: C:\OCR_PROJECT\output\json\sightspectrum 1027,1080_page_2.json
+2026-11-14 13:14:04,920 | INFO | src.ocr_engine | OCR batch summary: {'total_images': 6, 'successful': 6, 'failed': 0}
+2026-11-14 13:14:04,930 | INFO | __main__ | OCR stage completed: {'total_images': 6, 'successful': 6, 'failed': 0}
+2026-11-14 13:14:04,975 | INFO | src.file_manager | Saved JSON output: C:\OCR_PROJECT\output\json\processing_summary.json
+2026-11-14 13:14:04,975 | INFO | __main__ | Complete OCR pipeline finished.
+2026-11-14 13:14:04,976 | INFO | __main__ | Final summary: {'pdf_conversion': {'total_pdfs': 1, 'converted_pages': 2, 'skipped_pages': 0, 'failed_pages': 0, 'failed_documents': 0}, 'image_preprocessing': {'total_images': 6, 'direct_to_ocr': 0, 'processed_to_ocr': 6, 'manual_review': 0, 'errors': 0}, 'ocr': {'total_images': 6, 'successful': 6, 'failed': 0}}

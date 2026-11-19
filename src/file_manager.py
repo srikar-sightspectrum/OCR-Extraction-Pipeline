@@ -33,6 +33,7 @@ def create_output_directories(project_root: str | Path) -> dict[str, Path]:
         "ocr_images": root / "output" / "ocr_images",
         "json": root / "output" / "json",
         "manual_review": root / "output" / "manual_review",
+        "reconstructed_pdf": root / "output" / "reconstructed_pdf",
         "logs": root / "logs",
     }
 

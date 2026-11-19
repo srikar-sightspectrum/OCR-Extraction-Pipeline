@@ -1,0 +1,18 @@
+{
+    "invoice_details": {
+        "invoice_number": null,
+        "invoice_date": null,
+        "due_date": null,
+        "po_number": null,
+        "gstin": null,
+        "supplier_name": null,
+        "buyer_name": null,
+        "subtotal": null,
+        "tax_amount": null,
+        "discount": null,
+        "total_amount": null,
+        "currency": null,
+        "payment_terms": null
+    },
+    "line_items": []
+}

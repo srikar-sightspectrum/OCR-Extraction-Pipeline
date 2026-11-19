@@ -1,0 +1,96 @@
+{
+    "invoice_details": {
+        "invoice_number": "(DUPLICATE FOR TRANSPORTER)",
+        "invoice_date": null,
+        "due_date": null,
+        "po_number": "AZIZ MULK 3RD STREET",
+        "gstin": "STATENAME:TAMILNADU,CODE:33",
+        "supplier_name": null,
+        "buyer_name": "State Name",
+        "subtotal": null,
+        "tax_amount": "271.80",
+        "discount": null,
+        "total_amount": null,
+        "currency": null,
+        "payment_terms": "Other References"
+    },
+    "line_items": [
+        {
+            "description": "No.",
+            "hsn_sac": null,
+            "quantity": "Rate",
+            "unit": null,
+            "rate": null,
+            "discount": null,
+            "tax_rate": null,
+            "tax_amount": null,
+            "amount": null
+        },
+        {
+            "description": "1GAR BAGE LARGE Shalimar",
+            "hsn_sac": "9603",
+            "quantity": "18 % 10 PKT",
+            "unit": null,
+            "rate": "PKT 145.00",
+            "discount": null,
+            "tax_rate": null,
+            "tax_amount": null,
+            "amount": "1,450.00"
+        },
+        {
+            "description": "2 BALL PEN BLUE",
+            "hsn_sac": "9608",
+            "quantity": "20 NOS 18 %",
+            "unit": null,
+            "rate": "NOS 3.00",
+            "discount": null,
+            "tax_rate": null,
+            "tax_amount": null,
+            "amount": "60.00"
+        },
+        {
+            "description": null,
+            "hsn_sac": null,
+            "quantity": null,
+            "unit": null,
+            "rate": null,
+            "discount": null,
+            "tax_rate": null,
+            "tax_amount": null,
+            "amount": "1,510.00"
+        },
+        {
+            "description": null,
+            "hsn_sac": "Output CGST",
+            "quantity": null,
+            "unit": null,
+            "rate": null,
+            "discount": null,
+            "tax_rate": null,
+            "tax_amount": null,
+            "amount": "135.90"
+        },
+        {
+            "description": null,
+            "hsn_sac": "Output SGST",
+            "quantity": null,
+            "unit": null,
+            "rate": null,
+            "discount": null,
+            "tax_rate": null,
+            "tax_amount": null,
+            "amount": "135.90"
+        },
+        {
+            "description": null,
+            "hsn_sac": "Rounded Off",
+            "quantity": null,
+            "unit": null,
+            "rate": null,
+            "discount": null,
+            "tax_rate": null,
+            "tax_amount": null,
+            "amount": "0.20"
+        }
+    ]
+}

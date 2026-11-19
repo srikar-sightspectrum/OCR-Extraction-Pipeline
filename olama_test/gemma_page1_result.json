@@ -1,0 +1,30 @@
+{
+    "invoice_details": {
+        "invoice_number": "GS-2026/045",
+        "invoice_date": "11 Nov 2026",
+        "due_date": "null",
+        "po_number": null,
+        "gstin": "33AAAAA0000A1Z5",
+        "supplier_name": "33 - Tamil",
+        "buyer_name": "Nadu",
+        "subtotal": "11800.00",
+        "tax_amount": "null",
+        "discount": null,
+        "total_amount": "11800.00",
+        "currency": "INR",
+        "payment_terms": null
+    },
+    "line_items": [
+        {
+            "description": "Goods",
+            "hsn_sac": null,
+            "quantity": null,
+            "unit": null,
+            "rate": null,
+            "discount": null,
+            "tax_rate": null,
+            "tax_amount": null,
+            "amount": null
+        }
+    ]
+}

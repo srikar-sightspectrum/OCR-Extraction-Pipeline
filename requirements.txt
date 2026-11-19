@@ -7,6 +7,9 @@ paddlepaddle==3.2.0
 paddleocr==3.7.0
 
 # Direct dependencies used by the project code
+# PDF rendering and reconstructed PDF generation
 PyMuPDF
+
+# Image processing and numerical operations
 numpy
 opencv-contrib-python

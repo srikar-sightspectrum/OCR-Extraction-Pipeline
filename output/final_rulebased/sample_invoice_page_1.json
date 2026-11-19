@@ -1,0 +1,74 @@
+{
+    "invoice_details": {
+        "invoice_number": "GS-2026/045",
+        "invoice_date": null,
+        "due_date": null,
+        "po_number": null,
+        "gstin": "33AAAAA0000A1Z5",
+        "supplier_name": null,
+        "buyer_name": null,
+        "subtotal": null,
+        "tax_amount": null,
+        "discount": null,
+        "total_amount": "Amount in Words: Eleven Thousand Eight Hundred Rupees Only.",
+        "currency": null,
+        "payment_terms": null
+    },
+    "line_items": [
+        {
+            "description": "Premium Office Stationeries 1 Pack",
+            "hsn_sac": "4820",
+            "quantity": "10 Packs",
+            "unit": null,
+            "rate": "400.00",
+            "discount": null,
+            "tax_rate": null,
+            "tax_amount": null,
+            "amount": "4,000.00"
+        },
+        {
+            "description": "Executive Ergonomic Desk 2 Organizers",
+            "hsn_sac": "3926",
+            "quantity": "12 Pcs",
+            "unit": null,
+            "rate": "500.00",
+            "discount": null,
+            "tax_rate": null,
+            "tax_amount": null,
+            "amount": "6,000.00"
+        },
+        {
+            "description": null,
+            "hsn_sac": "Tax Computation",
+            "quantity": null,
+            "unit": null,
+            "rate": null,
+            "discount": null,
+            "tax_rate": null,
+            "tax_amount": null,
+            "amount": null
+        },
+        {
+            "description": null,
+            "hsn_sac": "Assessment Summary",
+            "quantity": "Amount (INR)",
+            "unit": null,
+            "rate": null,
+            "discount": null,
+            "tax_rate": null,
+            "tax_amount": null,
+            "amount": null
+        },
+        {
+            "description": null,
+            "hsn_sac": "Total Taxable Value",
+            "quantity": "10,000.00",
+            "unit": null,
+            "rate": null,
+            "discount": null,
+            "tax_rate": null,
+            "tax_amount": null,
+            "amount": null
+        }
+    ]
+}

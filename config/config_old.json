@@ -1,0 +1,29 @@
+{
+    "log_level": "INFO",
+    "paths": {
+        "input_folder": "input",
+        "pdf_images": "output/pdf_images",
+        "ocr_images": "output/ocr_images",
+        "json_output": "output/json",
+        "manual_review": "output/manual_review",
+        "reconstructed_pdf": "output/reconstructed_pdf"
+    },
+    "pdf": {
+        "dpi": 300,
+        "image_format": "png",
+        "overwrite_existing": false,
+        "recursive": false
+    },
+    "preprocessing": {
+        "low_brightness": 80,
+        "high_brightness": 220,
+        "low_contrast": 40,
+        "severe_blur": 50,
+        "recursive": false
+    },
+    "ocr": {
+        "language": "en",
+        "device": "cpu",
+        "recursive": false
+    }
+}

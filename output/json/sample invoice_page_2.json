@@ -1,0 +1,218 @@
+{
+    "document_name": "sample invoice_page_2",
+    "total_text_regions": 9,
+    "pages": [
+        {
+            "page_number": 1,
+            "text_regions": [
+                {
+                    "id": 1,
+                    "text": "Bank Details & Payment Info",
+                    "confidence": 0.9999022483825684,
+                    "bounding_box": [
+                        [
+                            295,
+                            340
+                        ],
+                        [
+                            810,
+                            340
+                        ],
+                        [
+                            810,
+                            381
+                        ],
+                        [
+                            295,
+                            381
+                        ]
+                    ]
+                },
+                {
+                    "id": 2,
+                    "text": "Authorization",
+                    "confidence": 0.9999979734420776,
+                    "bounding_box": [
+                        [
+                            1334,
+                            339
+                        ],
+                        [
+                            1591,
+                            337
+                        ],
+                        [
+                            1591,
+                            378
+                        ],
+                        [
+                            1335,
+                            380
+                        ]
+                    ]
+                },
+                {
+                    "id": 3,
+                    "text": "Bank Name: HDFC Bank",
+                    "confidence": 0.999930739402771,
+                    "bounding_box": [
+                        [
+                            295,
+                            468
+                        ],
+                        [
+                            783,
+                            468
+                        ],
+                        [
+                            783,
+                            511
+                        ],
+                        [
+                            295,
+                            511
+                        ]
+                    ]
+                },
+                {
+                    "id": 4,
+                    "text": "For Ganesh Stores",
+                    "confidence": 0.9999911189079285,
+                    "bounding_box": [
+                        [
+                            1336,
+                            468
+                        ],
+                        [
+                            1714,
+                            468
+                        ],
+                        [
+                            1714,
+                            511
+                        ],
+                        [
+                            1336,
+                            511
+                        ]
+                    ]
+                },
+                {
+                    "id": 5,
+                    "text": "Account Name: Ganesh Stores",
+                    "confidence": 0.9999498724937439,
+                    "bounding_box": [
+                        [
+                            295,
+                            603
+                        ],
+                        [
+                            914,
+                            601
+                        ],
+                        [
+                            915,
+                            645
+                        ],
+                        [
+                            295,
+                            647
+                        ]
+                    ]
+                },
+                {
+                    "id": 6,
+                    "text": "Account Number: 50200012345678",
+                    "confidence": 0.9997355341911316,
+                    "bounding_box": [
+                        [
+                            295,
+                            738
+                        ],
+                        [
+                            1020,
+                            735
+                        ],
+                        [
+                            1020,
+                            780
+                        ],
+                        [
+                            295,
+                            783
+                        ]
+                    ]
+                },
+                {
+                    "id": 7,
+                    "text": "IFSC Code: HDFC0001234",
+                    "confidence": 0.9968122839927673,
+                    "bounding_box": [
+                        [
+                            294,
+                            870
+                        ],
+                        [
+                            828,
+                            870
+                        ],
+                        [
+                            828,
+                            917
+                        ],
+                        [
+                            294,
+                            917
+                        ]
+                    ]
+                },
+                {
+                    "id": 8,
+                    "text": "Branch: Tambaram, Chennai",
+                    "confidence": 0.9997267723083496,
+                    "bounding_box": [
+                        [
+                            294,
+                            1007
+                        ],
+                        [
+                            867,
+                            1007
+                        ],
+                        [
+                            867,
+                            1054
+                        ],
+                        [
+                            294,
+                            1054
+                        ]
+                    ]
+                },
+                {
+                    "id": 9,
+                    "text": "Authorized Signatory",
+                    "confidence": 0.9999963641166687,
+                    "bounding_box": [
+                        [
+                            1335,
+                            1008
+                        ],
+                        [
+                            1775,
+                            1008
+                        ],
+                        [
+                            1775,
+                            1056
+                        ],
+                        [
+                            1335,
+                            1056
+                        ]
+                    ]
+                }
+            ]
+        }
+    ]
+}

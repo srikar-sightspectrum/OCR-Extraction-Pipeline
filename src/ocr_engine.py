@@ -1,331 +1,463 @@
+"""PP-StructureV3 image-to-JSON engine for invoice images.
+
+The PaddleOCR dependency is imported lazily so configuration validation and
+unit tests can run without loading GPU libraries.
 """
-English printed-text OCR using PaddleOCR 3.x and PP-OCRv6.
-
-This module:
-- Initializes the OCR pipeline once.
-- Runs OCR on individual images.
-- Processes a folder of images.
-- Normalizes PaddleOCR output into a stable JSON-friendly structure.
-- Validates and saves one JSON file per input image.
-
-Install a compatible PaddlePaddle inference package first, then install the
-pinned PaddleOCR package. See the project's installation notes.
-"""
-
 from __future__ import annotations
 
+import gc
 import json
 import logging
+import re
+import shutil
+from dataclasses import dataclass
 from pathlib import Path
+from statistics import mean
 from typing import Any, Iterable
-
-import numpy as np
-
-try:
-    from paddleocr import PaddleOCR
-except ImportError as exc:
-    raise ImportError(
-        "PaddleOCR is not installed. Install a compatible PaddlePaddle "
-        "inference package and paddleocr==3.7.0."
-    ) from exc
-
 
 logger = logging.getLogger(__name__)
 
-SUPPORTED_IMAGE_EXTENSIONS = {
-    ".png", ".jpg", ".jpeg", ".tif", ".tiff", ".bmp"
-}
+SUPPORTED_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".tif", ".tiff", ".bmp", ".webp"}
+
+
+def _to_jsonable(value: Any) -> Any:
+    """Recursively convert Paddle/Numpy values to standard JSON values."""
+    try:
+        import numpy as np
+
+        if isinstance(value, np.ndarray):
+            return value.tolist()
+        if isinstance(value, np.generic):
+            return value.item()
+    except ImportError:
+        pass
+
+    if isinstance(value, dict):
+        return {str(key): _to_jsonable(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_to_jsonable(item) for item in value]
+    if isinstance(value, Path):
+        return str(value)
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if hasattr(value, "tolist"):
+        return _to_jsonable(value.tolist())
+    return str(value)
+
+
+def _find_key_recursive(data: Any, key: str) -> list[Any]:
+    """Return every value stored under `key` in a nested dict/list structure."""
+    found: list[Any] = []
+    if isinstance(data, dict):
+        for current_key, value in data.items():
+            if current_key == key:
+                found.append(value)
+            found.extend(_find_key_recursive(value, key))
+    elif isinstance(data, list):
+        for value in data:
+            found.extend(_find_key_recursive(value, key))
+    return found
+
+
+@dataclass(frozen=True)
+class TableQuality:
+    """Heuristic table-output assessment; it is not a ground-truth accuracy score."""
+
+    table_count: int
+    recognized_cell_count: int
+    html_row_count: int
+    html_cell_count: int
+    mean_cell_confidence: float | None
+    score: float
+    is_poor: bool
+    reason: str
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "table_count": self.table_count,
+            "recognized_cell_count": self.recognized_cell_count,
+            "html_row_count": self.html_row_count,
+            "html_cell_count": self.html_cell_count,
+            "mean_cell_confidence": self.mean_cell_confidence,
+            "heuristic_score": round(self.score, 4),
+            "is_poor": self.is_poor,
+            "reason": self.reason,
+            "score_is_heuristic_not_model_accuracy": True,
+        }
+
+
+def evaluate_table_quality(
+    result_payload: dict[str, Any],
+    *,
+    minimum_recognized_cells: int = 1,
+    minimum_mean_confidence: float = 0.45,
+) -> TableQuality:
+    """Assess whether PP-StructureV3 produced minimally usable table output.
+
+    The assessment uses available table HTML, cell OCR text and confidence
+    values. It is intentionally conservative and should be calibrated against
+    the project's invoice test set before production use.
+    """
+    table_lists = _find_key_recursive(result_payload, "table_res_list")
+    tables: list[dict[str, Any]] = []
+    for table_list in table_lists:
+        if isinstance(table_list, list):
+            tables.extend(item for item in table_list if isinstance(item, dict))
+
+    if not tables:
+        return TableQuality(
+            table_count=0,
+            recognized_cell_count=0,
+            html_row_count=0,
+            html_cell_count=0,
+            mean_cell_confidence=None,
+            score=0.0,
+            is_poor=True,
+            reason="No table regions/results were returned by PP-StructureV3.",
+        )
+
+    recognized_texts: list[str] = []
+    confidence_values: list[float] = []
+    row_count = 0
+    html_cell_count = 0
+    valid_html_tables = 0
+    has_cell_geometry = False
+
+    for table in tables:
+        html = table.get("pred_html") or ""
+        if isinstance(html, str):
+            row_count += len(re.findall(r"<tr\b", html, flags=re.IGNORECASE))
+            html_cell_count += len(re.findall(r"<(?:td|th)\b", html, flags=re.IGNORECASE))
+            if "<table" in html.lower() and "</table>" in html.lower():
+                valid_html_tables += 1
+
+        boxes = table.get("cell_box_list") or []
+        if isinstance(boxes, list) and boxes:
+            has_cell_geometry = True
+
+        table_ocr = table.get("table_ocr_pred") or {}
+        if isinstance(table_ocr, dict):
+            texts = table_ocr.get("rec_texts") or []
+            scores = table_ocr.get("rec_scores") or []
+            if isinstance(texts, list):
+                recognized_texts.extend(
+                    str(text).strip() for text in texts if str(text).strip()
+                )
+            if isinstance(scores, list):
+                for score in scores:
+                    try:
+                        numeric_score = float(score)
+                    except (TypeError, ValueError):
+                        continue
+                    if 0.0 <= numeric_score <= 1.0:
+                        confidence_values.append(numeric_score)
+
+    recognized_count = len(recognized_texts)
+    mean_confidence = mean(confidence_values) if confidence_values else None
+
+    # Transparent weighted indicators, not a calibrated probability.
+    html_component = 1.0 if valid_html_tables else 0.0
+    structure_component = 1.0 if row_count > 0 and (html_cell_count > 0 or has_cell_geometry) else 0.0
+    text_component = min(1.0, recognized_count / max(1, minimum_recognized_cells))
+    confidence_component = (
+        min(1.0, mean_confidence / max(minimum_mean_confidence, 1e-6))
+        if mean_confidence is not None
+        else 0.5
+    )
+    score = (
+        0.30 * html_component
+        + 0.25 * structure_component
+        + 0.30 * text_component
+        + 0.15 * confidence_component
+    )
+
+    reasons: list[str] = []
+    if not valid_html_tables:
+        reasons.append("table HTML missing or incomplete")
+    if row_count == 0 or (html_cell_count == 0 and not has_cell_geometry):
+        reasons.append("row/cell structure not found")
+    if recognized_count < minimum_recognized_cells:
+        reasons.append("too few recognized table-cell texts")
+    if mean_confidence is not None and mean_confidence < minimum_mean_confidence:
+        reasons.append("mean table-cell OCR confidence below threshold")
+
+    return TableQuality(
+        table_count=len(tables),
+        recognized_cell_count=recognized_count,
+        html_row_count=row_count,
+        html_cell_count=html_cell_count,
+        mean_cell_confidence=mean_confidence,
+        score=score,
+        is_poor=bool(reasons),
+        reason="; ".join(reasons) if reasons else "Basic table-output checks passed.",
+    )
+
+
+class StructureEngine:
+    """Owns one PP-StructureV3 pipeline and lazily creates a retry pipeline."""
+
+    def __init__(self, settings: dict[str, Any]):
+        self.settings = dict(settings)
+        self.device = str(self.settings.get("device", "gpu:0"))
+        self.pipeline = self._create_pipeline(swapped_table_models=False)
+        self._pipeline_mode = "primary"
+
+    def _create_pipeline(self, *, swapped_table_models: bool) -> Any:
+        try:
+            from paddleocr import PPStructureV3
+        except ImportError as exc:
+            raise ImportError(
+                "PP-StructureV3 is unavailable. Install PaddleOCR 3.x with the "
+                "document-parser dependencies and a compatible PaddlePaddle build."
+            ) from exc
+
+        table_cfg = self.settings.get("table", {})
+        model_cfg = self.settings.get("models", {})
+        layout_cfg = model_cfg.get("layout", {})
+
+        wired_name = table_cfg.get("wired_model", "SLANeXt_wired")
+        wireless_name = table_cfg.get("wireless_model", "SLANeXt_wireless")
+        if swapped_table_models:
+            wired_name, wireless_name = wireless_name, wired_name
+
+        kwargs: dict[str, Any] = {
+            "lang": self.settings.get("language", "en"),
+            "device": self.device,
+            "layout_detection_model_name": layout_cfg.get("model_name", "PP-DocLayout-L"),
+            "text_detection_model_name": model_cfg.get("text_detection", {}).get(
+                "model_name", "PP-OCRv5_server_det"
+            ),
+            "text_recognition_model_name": model_cfg.get("text_recognition", {}).get(
+                "model_name", "PP-OCRv5_server_rec"
+            ),
+            "text_recognition_batch_size": int(self.settings.get("text_recognition_batch_size", 1)),
+            "table_classification_model_name": table_cfg.get(
+                "classification_model", "PP-LCNet_x1_0_table_cls"
+            ),
+            "wired_table_structure_recognition_model_name": wired_name,
+            "wireless_table_structure_recognition_model_name": wireless_name,
+            "use_doc_orientation_classify": bool(self.settings.get("use_doc_orientation_classify", False)),
+            "use_doc_unwarping": bool(self.settings.get("use_doc_unwarping", False)),
+            "use_textline_orientation": bool(self.settings.get("use_textline_orientation", False)),
+            "use_seal_recognition": bool(self.settings.get("use_seal_recognition", False)),
+            "use_table_recognition": bool(table_cfg.get("enabled", True)),
+            "use_formula_recognition": bool(self.settings.get("use_formula_recognition", False)),
+            "use_chart_recognition": bool(self.settings.get("use_chart_recognition", False)),
+            "use_region_detection": bool(self.settings.get("use_region_detection", False)),
+        }
+
+        # Explicit model directories are optional. When omitted, PaddleX uses
+        # its official model cache and downloads missing model weights.
+        model_dir_settings = (
+            (layout_cfg.get("model_dir"), "layout_detection_model_dir"),
+            (model_cfg.get("text_detection", {}).get("model_dir"), "text_detection_model_dir"),
+            (model_cfg.get("text_recognition", {}).get("model_dir"), "text_recognition_model_dir"),
+            (table_cfg.get("table_classification_model_dir"), "table_classification_model_dir"),
+            (table_cfg.get("wired_model_dir"), "wired_table_structure_recognition_model_dir"),
+            (table_cfg.get("wireless_model_dir"), "wireless_table_structure_recognition_model_dir"),
+        )
+        for value, constructor_key in model_dir_settings:
+            if value:
+                kwargs[constructor_key] = str(value)
+
+        logger.info(
+            "Initializing PP-StructureV3 | device=%s | OCR=%s | layout=%s | wired=%s | wireless=%s | swapped=%s",
+            self.device,
+            kwargs["ocr_version"],
+            kwargs["layout_detection_model_name"],
+            wired_name,
+            wireless_name,
+            swapped_table_models,
+        )
+        return PPStructureV3(**kwargs)
+
+    def _release_pipeline(self) -> None:
+        self.pipeline = None
+        gc.collect()
+        try:
+            import paddle
+
+            if paddle.device.is_compiled_with_cuda():
+                paddle.device.cuda.empty_cache()
+        except (ImportError, AttributeError, RuntimeError):
+            logger.debug("GPU cache cleanup was unavailable.", exc_info=True)
+
+    def _ensure_primary(self) -> None:
+        if self.pipeline is None:
+            self.pipeline = self._create_pipeline(swapped_table_models=False)
+            self._pipeline_mode = "primary"
+
+    def _run_once(self, image_path: Path) -> dict[str, Any]:
+        self._ensure_primary()
+        predict_cfg = self.settings.get("prediction", {})
+        results = self.pipeline.predict(
+            input=str(image_path),
+            use_doc_orientation_classify=bool(self.settings.get("use_doc_orientation_classify", False)),
+            use_doc_unwarping=bool(self.settings.get("use_doc_unwarping", False)),
+            use_textline_orientation=bool(self.settings.get("use_textline_orientation", False)),
+            use_seal_recognition=bool(self.settings.get("use_seal_recognition", False)),
+            use_table_recognition=bool(self.settings.get("table", {}).get("enabled", True)),
+            use_formula_recognition=bool(self.settings.get("use_formula_recognition", False)),
+            use_chart_recognition=bool(self.settings.get("use_chart_recognition", False)),
+            use_region_detection=bool(self.settings.get("use_region_detection", False)),
+            use_table_orientation_classify=bool(predict_cfg.get("use_table_orientation_classify", False)),
+            use_ocr_results_with_table_cells=bool(predict_cfg.get("use_ocr_results_with_table_cells", True)),
+        )
+        results = list(results)
+        if not results:
+            raise RuntimeError(f"PP-StructureV3 returned no result for {image_path.name}.")
+        if len(results) != 1:
+            raise RuntimeError(
+                f"Expected one result for image {image_path.name}, received {len(results)}."
+            )
+        payload = getattr(results[0], "json", None)
+        if callable(payload):
+            payload = payload()
+        if payload is None:
+            raise TypeError("PP-StructureV3 result does not expose the documented .json attribute.")
+        if not isinstance(payload, dict):
+            raise TypeError(f"Expected result.json to be a dictionary, got {type(payload).__name__}.")
+        return _to_jsonable(payload)
+
+    def process_image(self, image_path: Path) -> tuple[dict[str, Any], bool]:
+        """Run primary table mapping and, when indicated, retry swapped models."""
+        image_path = Path(image_path)
+        primary_payload = self._run_once(image_path)
+        eval_cfg = self.settings.get("table_evaluation", {})
+        primary_quality = evaluate_table_quality(
+            primary_payload,
+            minimum_recognized_cells=int(eval_cfg.get("minimum_recognized_cells", 1)),
+            minimum_mean_confidence=float(eval_cfg.get("minimum_mean_confidence", 0.45)),
+        )
+
+        attempts = [{"model_mapping": "primary", **primary_quality.as_dict()}]
+        selected_payload = primary_payload
+        selected_quality = primary_quality
+        retried = False
+
+        should_retry = (
+            bool(eval_cfg.get("enabled", True))
+            and bool(eval_cfg.get("retry_with_alternative", True))
+            and primary_quality.table_count > 0
+            and primary_quality.is_poor
+        )
+
+        if should_retry:
+            logger.warning(
+                "Table output for %s did not pass basic checks (%s). Retrying with swapped SLANeXt mapping.",
+                image_path.name,
+                primary_quality.reason,
+            )
+            retried = True
+            self._release_pipeline()
+            try:
+                self.pipeline = self._create_pipeline(swapped_table_models=True)
+                self._pipeline_mode = "alternative"
+                alternative_payload = self._run_once(image_path)
+                alternative_quality = evaluate_table_quality(
+                    alternative_payload,
+                    minimum_recognized_cells=int(eval_cfg.get("minimum_recognized_cells", 1)),
+                    minimum_mean_confidence=float(eval_cfg.get("minimum_mean_confidence", 0.45)),
+                )
+                attempts.append({"model_mapping": "alternative_swapped", **alternative_quality.as_dict()})
+                if alternative_quality.score > primary_quality.score:
+                    selected_payload = alternative_payload
+                    selected_quality = alternative_quality
+            except Exception as exc:
+                # A failed retry must not discard the first-pass OCR result.
+                attempts.append({
+                    "model_mapping": "alternative_swapped",
+                    "error": f"{type(exc).__name__}: {exc}",
+                    "is_poor": True,
+                })
+                logger.exception("Alternative table-model retry failed for %s", image_path.name)
+            finally:
+                # Do not retain both model sets in VRAM. The primary pipeline
+                # is re-created lazily before the next image.
+                self._release_pipeline()
+
+        manual_review = selected_quality.is_poor
+        if selected_quality.table_count == 0:
+            manual_review = bool(eval_cfg.get("review_when_no_table_detected", True))
+
+        output = {
+            "source_image": image_path.name,
+            "pipeline": "PP-StructureV3",
+            "configuration": {
+                "language": self.settings.get("language", "en"),
+                "ocr_version": self.settings.get("ocr_version", "PP-OCRv5"),
+                "device": self.device,
+                "layout_model": self.settings.get("models", {}).get("layout", {}).get("model_name", "PP-DocLayout-L"),
+                "table_classifier": self.settings.get("table", {}).get("classification_model", "PP-LCNet_x1_0_table_cls"),
+            },
+            "table_evaluation": {
+                "selection_method": "PP-StructureV3 table classification module",
+                "attempts": attempts,
+                "selected_model_mapping": attempts[-1]["model_mapping"] if selected_quality is not primary_quality else "primary",
+                "selected_quality": selected_quality.as_dict(),
+                "human_review_required": manual_review,
+            },
+            "paddle_result": selected_payload,
+        }
+        return output, retried
 
 
 def initialize_ocr(
     language: str = "en",
-    device: str = "cpu",
-) -> PaddleOCR:
-    """
-    Initialize the PaddleOCR 3.x pipeline using PP-OCRv6.
+    device: str = "gpu:0",
+    settings: dict[str, Any] | None = None,
+) -> StructureEngine:
+    """Initialize PP-StructureV3 once and return a reusable engine.
 
-    The returned engine should be reused for all images. Do not call this
-    function inside the per-image processing loop.
+    `language` and `device` retain compatibility with the previous main.py
+    interface. Full settings from config.json can be supplied as `settings`.
     """
+    effective_settings = dict(settings or {})
+    effective_settings["language"] = language
+    effective_settings["device"] = device
     if language != "en":
-        raise ValueError("This OCR module is configured for English only.")
+        raise ValueError("This invoice OCR configuration currently supports English only.")
+    if not device.strip():
+        raise ValueError("OCR device must be a non-empty string, e.g. 'gpu:0' or 'cpu'.")
+    return StructureEngine(effective_settings)
 
-    if not isinstance(device, str) or not device.strip():
-        raise ValueError("device must be a non-empty string, e.g. 'cpu' or 'gpu:0'.")
 
-    logger.info(
-        "Initializing PaddleOCR PP-OCRv6 | language=%s | device=%s",
-        language,
-        device,
-    )
-
+def _atomic_write_json(data: dict[str, Any], output_path: Path) -> None:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path = output_path.with_name(output_path.name + ".tmp")
     try:
-        engine = PaddleOCR(
-            lang=language,
-            ocr_version="PP-OCRv6",
-            device=device,
-            use_doc_orientation_classify=False,
-            use_doc_unwarping=False,
-            use_textline_orientation=False,
-        )
-    except Exception:
-        logger.exception("Failed to initialize PaddleOCR.")
-        raise
-
-    logger.info("PaddleOCR initialized successfully.")
-    return engine
-
-
-def extract_text(
-    image_path: Path,
-    ocr_engine: PaddleOCR,
-) -> list[Any]:
-    """
-    Run text detection and recognition on one image.
-
-    Returns the raw list of PaddleOCR 3.x result objects. Each result contains
-    fields such as rec_texts, rec_scores, rec_polys and rec_boxes.
-    """
-    image_path = Path(image_path)
-
-    if not image_path.is_file():
-        raise FileNotFoundError(f"Image file not found: {image_path}")
-
-    if image_path.suffix.lower() not in SUPPORTED_IMAGE_EXTENSIONS:
-        raise ValueError(f"Unsupported image format: {image_path.suffix}")
-
-    logger.info("Running OCR on: %s", image_path.name)
-
-    try:
-        results = ocr_engine.predict(str(image_path))
-        return list(results)
-    except Exception:
-        logger.exception("OCR inference failed for: %s", image_path)
-        raise
-
-
-def _to_python_list(value: Any) -> list[Any]:
-    """Convert NumPy arrays and tuples into JSON-friendly Python lists."""
-    if value is None:
-        return []
-
-    if isinstance(value, np.ndarray):
-        return value.tolist()
-
-    if hasattr(value, "tolist"):
-        return value.tolist()
-
-    if isinstance(value, (list, tuple)):
-        return [
-            _to_python_list(item) if isinstance(item, (np.ndarray, tuple)) else item
-            for item in value
-        ]
-
-    return [value]
-
-
-def format_ocr_results(
-    raw_results: Iterable[Any],
-    document_name: str,
-) -> dict[str, Any]:
-    """
-    Convert raw PaddleOCR results into the project's JSON structure.
-
-    PaddleOCR 3.x exposes recognized lines through rec_texts and rec_scores.
-    rec_polys contains four-point polygons; rec_boxes contains rectangular
-    [x_min, y_min, x_max, y_max] boxes. This output preserves polygon geometry.
-    """
-    pages: list[dict[str, Any]] = []
-    total_text_regions = 0
-
-    for result_index, result in enumerate(raw_results, start=1):
-        # OCRResult behaves like a dictionary in PaddleOCR 3.x.
-        texts = result.get("rec_texts", []) or []
-        scores = result.get("rec_scores", []) or []
-        polygons = result.get("rec_polys", []) or []
-
-        # Some result configurations may omit rec_polys. Use rec_boxes as a
-        # fallback, but preserve their four-value rectangle representation.
-        if not polygons:
-            polygons = result.get("rec_boxes", []) or []
-
-        texts = _to_python_list(texts)
-        scores = _to_python_list(scores)
-        polygons = _to_python_list(polygons)
-
-        if not (len(texts) == len(scores) == len(polygons)):
-            raise ValueError(
-                "PaddleOCR returned mismatched text, score and box counts "
-                f"for page result {result_index}."
-            )
-
-        text_regions: list[dict[str, Any]] = []
-
-        for region_index, (text, score, polygon) in enumerate(
-            zip(texts, scores, polygons),
-            start=1,
-        ):
-            text_regions.append(
-                {
-                    "id": region_index,
-                    "text": str(text),
-                    "confidence": float(score),
-                    "bounding_box": polygon,
-                }
-            )
-
-        page_index = result.get("page_index")
-        page_number = (
-            int(page_index) + 1
-            if page_index is not None
-            else result_index
-        )
-
-        pages.append(
-            {
-                "page_number": page_number,
-                "text_regions": text_regions,
-            }
-        )
-        total_text_regions += len(text_regions)
-
-    return {
-        "document_name": Path(document_name).stem,
-        "total_text_regions": total_text_regions,
-        "pages": pages,
-    }
-
-
-def validate_ocr_results(data: dict[str, Any]) -> tuple[bool, list[str]]:
-    """
-    Validate the normalized OCR data structure.
-
-    Empty OCR text is allowed as a result of a page containing no detectable
-    text. Confidence must be numeric and between 0 and 1.
-    """
-    errors: list[str] = []
-
-    if not isinstance(data, dict):
-        return False, ["OCR output must be a dictionary."]
-
-    if not isinstance(data.get("document_name"), str) or not data["document_name"]:
-        errors.append("'document_name' must be a non-empty string.")
-
-    pages = data.get("pages")
-    if not isinstance(pages, list):
-        errors.append("'pages' must be a list.")
-        return False, errors
-
-    calculated_total = 0
-
-    for page_position, page in enumerate(pages, start=1):
-        if not isinstance(page, dict):
-            errors.append(f"Page {page_position} must be an object.")
-            continue
-
-        regions = page.get("text_regions")
-        if not isinstance(regions, list):
-            errors.append(f"Page {page_position}: 'text_regions' must be a list.")
-            continue
-
-        calculated_total += len(regions)
-
-        for region_position, region in enumerate(regions, start=1):
-            prefix = f"Page {page_position}, region {region_position}"
-
-            if not isinstance(region, dict):
-                errors.append(f"{prefix} must be an object.")
-                continue
-
-            if not isinstance(region.get("text"), str):
-                errors.append(f"{prefix}: text must be a string.")
-
-            confidence = region.get("confidence")
-            if (
-                isinstance(confidence, bool)
-                or not isinstance(confidence, (int, float))
-                or not 0.0 <= float(confidence) <= 1.0
-            ):
-                errors.append(f"{prefix}: confidence must be between 0 and 1.")
-
-            box = region.get("bounding_box")
-            if not isinstance(box, list) or len(box) not in (4,):
-                # The expected normal form is a four-point polygon. A
-                # four-value rectangle is also accepted as a fallback.
-                if not (
-                    isinstance(box, list)
-                    and len(box) == 4
-                    and all(isinstance(value, (int, float)) for value in box)
-                ):
-                    errors.append(f"{prefix}: bounding_box has an invalid format.")
-
-    if data.get("total_text_regions") != calculated_total:
-        errors.append("'total_text_regions' does not match the page contents.")
-
-    return not errors, errors
-
-
-def save_ocr_results(
-    data: dict[str, Any],
-    output_folder: Path,
-) -> Path:
-    """
-    Validate and save OCR data as UTF-8 JSON.
-
-    Raises ValueError if validation fails. The JSON is written to a temporary
-    file first, then moved into place to reduce the risk of partial output.
-    """
-    is_valid, errors = validate_ocr_results(data)
-    if not is_valid:
-        raise ValueError("Invalid OCR results: " + "; ".join(errors))
-
-    output_folder = Path(output_folder)
-    output_folder.mkdir(parents=True, exist_ok=True)
-
-    output_path = output_folder / f"{data['document_name']}.json"
-    temporary_path = output_path.with_suffix(".json.tmp")
-
-    try:
-        with temporary_path.open("w", encoding="utf-8") as output_file:
-            json.dump(data, output_file, ensure_ascii=False, indent=4)
-
+        with temporary_path.open("w", encoding="utf-8") as handle:
+            json.dump(_to_jsonable(data), handle, ensure_ascii=False, indent=2)
         temporary_path.replace(output_path)
     finally:
         if temporary_path.exists():
             temporary_path.unlink()
 
-    logger.info("Saved OCR JSON: %s", output_path)
-    return output_path
-
 
 def process_ocr_folder(
     input_folder: Path,
     output_folder: Path,
-    ocr_engine: PaddleOCR,
+    ocr_engine: StructureEngine,
     recursive: bool = False,
+    manual_review_folder: Path | None = None,
 ) -> dict[str, int]:
-    """
-    Run OCR on every supported image in a folder and save one JSON per image.
-
-    The OCR engine is passed in so it is initialized once and reused. If
-    recursive=True, images in subfolders are discovered too; JSON files are
-    still written to the specified output folder using each image's stem.
-    """
+    """Process each image and save `<image_stem>.json` in the output folder."""
     input_folder = Path(input_folder).expanduser().resolve()
     output_folder = Path(output_folder).expanduser().resolve()
+    review_folder = Path(manual_review_folder).expanduser().resolve() if manual_review_folder else None
 
     if not input_folder.is_dir():
         raise NotADirectoryError(f"OCR input folder does not exist: {input_folder}")
-
     if input_folder == output_folder:
         raise ValueError("OCR input and JSON output folders must be different.")
 
     output_folder.mkdir(parents=True, exist_ok=True)
+    if review_folder:
+        review_folder.mkdir(parents=True, exist_ok=True)
 
     pattern = "**/*" if recursive else "*"
     image_paths = sorted(
-        path
-        for path in input_folder.glob(pattern)
+        path for path in input_folder.glob(pattern)
         if path.is_file() and path.suffix.lower() in SUPPORTED_IMAGE_EXTENSIONS
     )
 
@@ -333,50 +465,44 @@ def process_ocr_folder(
         "total_images": len(image_paths),
         "successful": 0,
         "failed": 0,
+        "table_retries": 0,
+        "manual_review_required": 0,
     }
 
     if not image_paths:
-        logger.warning("No supported images found in: %s", input_folder)
+        logger.warning("No supported images found in %s", input_folder)
         return summary
 
     for image_path in image_paths:
         try:
-            raw_results = extract_text(image_path, ocr_engine)
-            structured_results = format_ocr_results(
-                raw_results,
-                document_name=image_path.name,
-            )
-            save_ocr_results(structured_results, output_folder)
+            result, retried = ocr_engine.process_image(image_path)
+            relative_parent = image_path.relative_to(input_folder).parent
+            destination_folder = output_folder / relative_parent
+            output_path = destination_folder / f"{image_path.stem}.json"
+            _atomic_write_json(result, output_path)
             summary["successful"] += 1
+            summary["table_retries"] += int(retried)
+
+            if result.get("table_evaluation", {}).get("human_review_required", False):
+                summary["manual_review_required"] += 1
+                if review_folder:
+                    review_destination = review_folder / relative_parent
+                    review_destination.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(image_path, review_destination / image_path.name)
+                    _atomic_write_json(
+                        {
+                            "source_image": image_path.name,
+                            "json_result": str(output_path),
+                            "reason": result.get("table_evaluation", {}).get("selected_quality", {}).get("reason"),
+                            "status": "requires_human_review",
+                        },
+                        review_destination / f"{image_path.stem}.review.json",
+                    )
+            logger.info("Processed %s -> %s", image_path.name, output_path)
 
         except Exception:
             summary["failed"] += 1
-            logger.exception("Failed OCR processing for: %s", image_path)
+            logger.exception("OCR processing failed for image: %s", image_path)
 
     logger.info("OCR batch summary: %s", summary)
     return summary
-
-
-if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-    )
-
-    project_root = Path(__file__).resolve().parent.parent
-
-    # CPU is the safe initial default. Change to "gpu:0" only after installing
-    # a PaddlePaddle build compatible with the machine's CUDA environment.
-    engine = initialize_ocr(
-        language="en",
-        device="cpu",
-    )
-
-    batch_summary = process_ocr_folder(
-        input_folder=project_root / "output" / "ocr_images",
-        output_folder=project_root / "output" / "json",
-        ocr_engine=engine,
-        recursive=False,
-    )
-
-    logger.info("OCR processing finished: %s", batch_summary)
